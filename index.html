@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Warframe</title>
+        <style>
+            :root {
+                --phosphor: oklch(87.16% 0.3113 142.7);
+                --phosphor-dim1: oklch(87.16% 0.3113 142.7 / 0.78);
+                --phosphor-dim2: oklch(87.16% 0.3113 142.7 / 0.55);
+                --phosphor-dim3: oklch(87.16% 0.3113 142.7 / 0.27);
+                --phosphor-dim4: oklch(87.16% 0.3113 142.7 / 0);
+                --black: #12100d;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            @keyframes crt-flicker {
+              0% {
+                opacity: 0.13;
+              }
+              50% {
+                opacity: 0.15;
+              }
+              100% {
+                opacity: 0.13;
+              }
+            }
+
+            @keyframes glow {
+              10% {
+                opacity: 0.9;
+              }
+              50% {
+                opacity: 0.7;
+              }
+              90% {
+                opacity: 0.9;
+              }
+            }
+
+            @keyframes flicker {
+              0% {
+                opacity: 0.15795;
+              }
+              5% {
+                opacity: 0.31511;
+              }
+              10% {
+                opacity: 0.94554;
+              }
+              15% {
+                opacity: 0.2469;
+              }
+              20% {
+                opacity: 0.62031;
+              }
+              25% {
+                opacity: 0.293;
+              }
+              30% {
+                opacity: 0.0899;
+              }
+              35% {
+                opacity: 0.5344;
+              }
+              40% {
+                opacity: 0.12778;
+              }
+              45% {
+                opacity: 0.52042;
+              }
+              50% {
+                opacity: 0.3823;
+              }
+              55% {
+                opacity: 0.2198;
+              }
+              60% {
+                opacity: 0.9383;
+              }
+              65% {
+                opacity: 0.86615;
+              }
+              70% {
+                opacity: 0.68695;
+              }
+              75% {
+                opacity: 0.55749;
+              }
+              80% {
+                opacity: 0.96984;
+              }
+              85% {
+                opacity: 0.361;
+              }
+              90% {
+                opacity: 0.24467;
+              }
+              95% {
+                opacity: 0.8351;
+              }
+              100% {
+                opacity: 0.54813;
+              }
+            }
+
+            header::before,
+            header::after {
+                content: "";
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: inherit;
+                top: 0;
+                left: 0;
+                z-index: 1;
+                pointer-events: none;
+            }
+
+            header::before {
+                animation: crt-flicker 500ms infinite;
+                background: var(--black) radial-gradient(
+                    circle at center,
+                    var(--phosphor) 0%,
+                    var(--phosphor-dim1) 58%,
+                    var(--phosphor-dim2) 80%,
+                    var(--phosphor-dim3) 93%,
+                    var(--phosphor-dim4) 100%
+                  );
+                z-index: 1;
+                opacity: 0.2;
+            }
+
+            header::after {
+                background: linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0),
+                    rgba(255, 255, 255, 0) 50%,
+                    rgba(0, 0, 0, 0.2) 70%,
+                    rgba(0, 0, 0, 0.6)
+                );
+                background-size: 100% 0.4vh;
+                z-index: 1;
+            }
+
+            body {
+                font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                text-rendering: optimizeLegibility;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                margin: 0;
+                width: 100dvi;
+                min-height: 100dvb;
+            }
+
+            .sr-only,
+            time,
+            header h1 {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border-width: 0;
+            }
+
+            header {
+                position: relative;
+                display: grid;
+                width: 100%;
+                height: 100dvb;
+                color: var(--phosphor);
+                background: black;
+                padding: 2rem;
+                align-content: center;
+            }
+
+            svg#warframe_logo {
+                margin-inline: auto;
+                height: 100%;
+                width: 100%;
+                padding: 2rem;
+                max-width: 800px;
+                filter: drop-shadow(0 0 15px var(--phosphor));
+                opacity: 0.5;
+
+                & #warframe_logo_text path {
+                    fill: none;
+                    stroke: var(--phosphor);
+                    stroke-width: 15;
+                    animation: glow 3s infinite;
+                }
+
+                & #warframe_logo_lotus path {
+                    fill: var(--phosphor);
+                    animation: flicker 10s infinite;
+                }
+            }
+
+            segmented-display {
+                --segment-size: 4px;
+                display: inline-flex;
+                margin-inline: auto;
+                color: var(--phosphor);
+                filter: drop-shadow(0 0 15px var(--phosphor));
+                animation: glow 3s infinite;
+                padding: 2rem;
+
+                & .display-container {
+                    position: relative;
+
+                    &:has(+ .display-container) {
+                        margin-right: calc(var(--segment-size) * 2);
+                    }
+                }
+
+                & .display-container div.segment-x,
+                & .display-container div.segment-y {
+                    position: absolute;
+                }
+
+                & .display-container span.segment-border {
+                    display: block;
+                    position: absolute;
+                }
+
+                & .display-container {
+                    width: calc(var(--segment-size) * 10);
+                    height: calc(var(--segment-size) * 10 * 2);
+                }
+
+                & .display-container .segment-x {
+                    width: calc(var(--segment-size) * 8);
+                    left: calc(var(--segment-size) + 1px);
+                    border-bottom: var(--segment-size) solid currentColor;
+                    border-left: var(--segment-size) solid transparent;
+                    border-right: var(--segment-size) solid transparent;
+                }
+
+                & .display-container .segment-x .segment-border {
+                    top: var(--segment-size);
+                    left: calc(var(--segment-size) * -1);
+                    right: calc(var(--segment-size) * -1);
+                    border-top: var(--segment-size) solid currentColor;
+                    border-left: var(--segment-size) solid transparent;
+                    border-right: var(--segment-size) solid transparent;
+                }
+
+                & .display-container .segment-y {
+                    height: calc(var(--segment-size) * 8);
+                    width: 0;
+                    border-right: var(--segment-size) solid currentColor;
+                    border-top: var(--segment-size) solid transparent;
+                    border-bottom: var(--segment-size) solid transparent;
+                }
+
+                & .display-container .segment-y .segment-border {
+                    position: relative;
+                    left: var(--segment-size);
+                    height: calc(var(--segment-size) * 8);
+                    margin-top: calc(var(--segment-size) * -1);
+                    border-left: var(--segment-size) solid currentColor;
+                    border-top: var(--segment-size) solid transparent;
+                    border-bottom: var(--segment-size) solid transparent;
+                }
+
+                & .display-container .segment-a {
+                    top: 0;
+                }
+
+                & .display-container .segment-b {
+                    top: calc(var(--segment-size) + 1px);
+                    left: calc((var(--segment-size) * 8) + 2px);
+                }
+
+                & .display-container .segment-c {
+                    top: calc((var(--segment-size) * 9) + 4px);
+                    left: calc((var(--segment-size) * 8) + 2px);
+                }
+
+                & .display-container .segment-d {
+                    top: calc((var(--segment-size) * 8 * 2) + 4px);
+                }
+
+                & .display-container .segment-e {
+                    top: calc((var(--segment-size) * 9) + 4px);
+                    left: 0px;
+                }
+
+                & .display-container .segment-f {
+                    top: calc(var(--segment-size) + 1px);
+                    left: 0px;
+                }
+
+                & .display-container .segment-g {
+                    top: calc((var(--segment-size) * 8) + 2px);
+                }
+
+                & .display-no-1 .segment-a,
+                & .display-no-1 .segment-d,
+                & .display-no-1 .segment-e,
+                & .display-no-1 .segment-f,
+                & .display-no-1 .segment-g {
+                    opacity: 0.05;
+                }
+
+                & .display-no-2 .segment-c,
+                & .display-no-2 .segment-f {
+                    opacity: 0.05;
+                }
+
+                & .display-no-3 .segment-e,
+                & .display-no-3 .segment-f {
+                    opacity: 0.05;
+                }
+
+                & .display-no-4 .segment-a,
+                & .display-no-4 .segment-d,
+                & .display-no-4 .segment-e {
+                    opacity: 0.05;
+                }
+
+                & .display-no-5 .segment-b,
+                & .display-no-5 .segment-e {
+                    opacity: 0.05;
+                }
+
+                & .display-no-6 .segment-b {
+                    opacity: 0.05;
+                }
+
+                & .display-no-7 .segment-d,
+                & .display-no-7 .segment-e,
+                & .display-no-7 .segment-f,
+                & .display-no-7 .segment-g {
+                    opacity: 0.05;
+                }
+
+                & .display-no-8 {}
+
+                & .display-no-9 .segment-e {
+                    opacity: 0.05;
+                }
+
+                & .display-no-0 .segment-g {
+                    opacity: 0.05;
+                }
+            }
+
+            @media screen and (max-width: 600px) {
+                segmented-display {
+                    padding: 1rem;
+                    --segment-size: 1.5px;
+                }
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Warframe</h1>
+
+            <svg id="warframe_logo" width="900" height="377" viewBox="0 0 1800 754" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="warframe_logo_lotus_gradient" x1="599.674194" y1="418.397521" x2="599.674194" y2="-100.087305" gradientUnits="userSpaceOnUse">
+                        <stop offset="0.28701" stop-color="#066285" stop-opacity="1"/>
+                        <stop offset="1" stop-color="#003047" stop-opacity="1"/>
+                    </linearGradient>
+                </defs>
+                <g id="warframe_logo_text">
+                    <path fill="#000" d="M 746.071045 675.092407 C 746.071045 675.092407 732.005554 671.499817 724.125854 663.59021 L 670.9776 592.152954 L 675.043213 590.897095 C 681.603455 588.875977 688.123474 586.116333 694.428589 582.685303 C 700.636353 579.307556 706.306824 574.950012 711.285645 569.725769 C 716.22113 564.543823 720.283325 558.192017 723.358826 550.852661 C 726.427185 543.520325 728.08252 534.791138 728.283997 524.927429 C 728.485474 505.233429 723.553467 490.333557 713.632324 480.657562 C 703.459961 470.733368 691.28595 463.69635 677.447388 459.734833 C 663.386658 455.705933 649.000427 453.617767 634.695007 453.516998 C 620.053589 453.409424 598.402344 453.355774 590.586304 453.355774 L 554.488281 453.355774 L 554.488281 591.655823 L 594.413696 675.058716 L 594.413696 488.795776 L 647.174194 488.802643 C 654.392456 489.238922 660.355103 490.51474 664.897644 492.589478 C 669.550842 494.718292 673.854736 498.337341 677.685608 503.35321 C 681.623718 508.510132 683.618042 515.93634 683.618042 525.424255 C 683.618042 535.1604 681.502747 542.714478 677.319458 547.878235 C 673.284058 552.87384 668.778687 556.499878 663.934021 558.661865 C 659.163208 560.797241 652.858093 561.992188 645.102905 562.207092 L 602.085388 562.066162 L 684.799622 675.058716 L 689.790466 675.058716 L 689.701477 675.092407 L 746.071045 675.092407 Z"/>
+                    <path fill="#000" d="M 1126.088867 675.092407 C 1126.088867 675.092407 1110.567749 671.184509 1102.956909 662.525879 L 1050.595825 592.152954 L 1054.665039 590.897095 C 1061.22522 588.875977 1067.745239 586.116333 1074.050293 582.685303 C 1080.26123 579.307556 1085.928589 574.950012 1090.903931 569.725769 C 1095.839478 564.543823 1099.901611 558.192017 1102.976807 550.852661 C 1106.045532 543.520325 1107.703857 534.791138 1107.905396 524.927429 C 1108.100342 505.233429 1103.171753 490.333557 1093.247559 480.657562 C 1083.081299 470.733368 1070.901123 463.69635 1057.062256 459.734833 C 1043.008423 455.705933 1028.618652 453.617767 1014.316711 453.516998 C 999.671875 453.409424 978.017212 453.355774 970.208069 453.355774 L 934.109985 453.355774 L 934.109985 675.058716 L 940.582886 675.058716 L 940.492126 675.092407 L 996.861755 675.092407 C 996.861755 675.092407 981.69342 671.227905 974.035461 662.670227 L 974.035461 488.795776 L 1026.79248 488.802643 C 1034.010742 489.238922 1039.973389 490.51474 1044.519043 492.589478 C 1049.172241 494.718292 1053.476563 498.337341 1057.303955 503.35321 C 1061.245483 508.510132 1063.239502 515.93634 1063.239502 525.424255 C 1063.239502 535.1604 1061.11792 542.714478 1056.941162 547.878235 C 1052.905884 552.87384 1048.400024 556.499878 1043.552246 558.661865 C 1038.784912 560.797241 1032.479858 561.992188 1024.724243 562.207092 L 981.703369 562.066162 L 1064.421387 675.058716 L 1069.806519 675.058716 L 1069.719238 675.092407 L 1126.088867 675.092407 Z"/>
+                    <path fill="#000" d="M 910.333435 489.265747 L 910.333435 453.516998 L 754.000916 453.516998 L 754.000916 674.904358 L 761.548157 674.904358 L 795.538025 674.904358 L 817.917786 674.904358 C 817.917786 674.904358 803.318726 671.174194 795.538025 662.94873 L 795.538025 589.984009 L 897.909546 589.984009 L 899.344971 592.015137 L 876.241516 543.849365 C 876.241516 543.849365 876.949707 550.490051 872.879211 553.766663 L 795.692383 553.766663 L 795.692383 489.265747 L 910.333435 489.265747 Z"/>
+                    <path fill="#000" d="M 566.15863 675.058716 L 450.75705 456.404175 L 339.102142 675.058716 L 356.713165 675.058716 L 356.624115 675.092407 L 412.993744 675.092407 C 412.993744 675.092407 397.63559 671.184509 390.021332 662.525879 L 450.726807 537.611328 L 510.884979 662.606262 C 503.245605 671.207947 487.993011 675.092407 487.993011 675.092407 L 544.362671 675.092407 L 544.27356 675.058716 L 566.15863 675.058716 Z"/>
+                    <path fill="#000" d="M 1292.115479 675.058716 L 1176.723999 456.404175 L 1101.137207 604.669006 L 1127.599487 640.626099 L 1176.690308 537.611328 L 1237.02478 662.975891 C 1229.286499 671.312134 1214.487305 675.092407 1214.487305 675.092407 L 1270.856934 675.092407 L 1270.766235 675.058716 L 1292.115479 675.058716 Z"/>
+                    <path fill="#000" d="M 1439.575928 456.451263 L 1372.825439 581.35553 L 1305.625488 456.491516 L 1258.535522 541.116577 L 1279.102417 590.35321 L 1302.106812 540.767273 L 1371.717773 671.51355 L 1441.456055 540.344116 L 1499.904053 662.636536 C 1492.205444 671.083801 1477.225098 674.904358 1477.225098 674.904358 L 1505.768921 674.904358 L 1533.594727 674.904358 L 1554.571411 674.904358 L 1439.575928 456.451263 Z"/>
+                    <path fill="#000" d="M 395.471802 453.516998 L 367.750549 453.516998 L 339.102142 453.516998 C 339.102142 453.516998 354.284302 457.384674 361.935333 465.937469 L 305.173096 587.190674 L 235.874588 456.901276 L 166.290344 587.606995 L 108.23204 465.956024 C 115.885162 457.389832 131.087234 453.516998 131.087234 453.516998 L 102.296494 453.516998 L 74.717628 453.516998 L 57.237595 453.516998 L 171.773117 671.184509 L 234.769974 546.749939 L 301.657867 671.143982 L 413.467133 453.516998 L 395.471802 453.516998 Z"/>
+                    <path fill="#000" d="M 1740.641113 488.48703 L 1740.641113 453.201416 L 1607.905762 453.201416 L 1572.109863 453.201416 L 1551.536133 453.201416 C 1551.536133 453.201416 1564.079346 456.411041 1572.109863 463.422638 L 1572.109863 674.904358 L 1740.641113 674.904358 L 1740.641113 640.558655 L 1615.211182 640.558655 L 1615.211182 581.852661 L 1694.712891 581.852661 C 1698.469849 585.203247 1697.815186 591.535156 1697.815186 591.535156 L 1720.430176 545.064636 L 1719.221313 546.72998 L 1614.432617 546.72998 L 1614.432617 488.48703 L 1740.641113 488.48703 Z"/>
+                </g>
+                <g id="warframe_logo_lotus">
+                    <g id="g1">
+                        <g id="g2">
+                            <path fill="url(#warframe_logo_lotus_gradient)" d="M 718.759277 409.329651 C 693.863037 381.322723 670.766113 307.307037 670.766113 307.307037 L 670.766113 307.307037 C 670.766113 307.307037 697.549133 289.62381 726.674011 276.728271 C 722.709106 264.991241 720.437683 254.099945 718.757568 245.003265 C 709.847168 250.907196 695.647278 257.665405 687.461975 261.72113 C 635.406616 287.55249 608.007568 275.076691 608.007568 275.076691 C 608.007568 275.076691 610.43988 276.271698 614.373169 278.222351 C 623.833923 283.933411 641.680054 300.753357 655.164612 333.521057 L 693.399597 414.607147 C 693.553955 414.764954 693.726868 414.902802 693.881226 415.057159 L 739.807861 424.491119 C 731.486755 420.355011 724.255127 415.372772 718.759277 409.329651 Z"/>
+                        </g>
+                        <g id="g3">
+                            <path fill="url(#warframe_logo_lotus_gradient)" d="M 760.359619 390.233093 C 746.019104 374.104492 728.607849 332.064117 728.607849 332.064117 C 728.607849 332.064117 736.611694 327.323212 748.073669 321.716675 C 744.132019 316.740967 740.513 311.755371 737.278259 306.823669 C 708.042725 320.974792 692.802124 314.57547 692.802124 314.57547 C 692.802124 314.57547 693.938293 315.095947 695.766602 315.93515 C 700.097351 318.554169 708.774536 326.188721 719.026062 348.192657 L 739.807861 391.294006 C 740.175781 391.663269 740.56665 392.019073 740.940979 392.374908 L 770.560974 399.163422 C 766.752136 396.430634 763.294312 393.462677 760.359619 390.233093 Z"/>
+                        </g>
+                    </g>
+                    <g id="g4">
+                        <g id="g5">
+                            <path fill="url(#warframe_logo_lotus_gradient)" d="M 1235.53772 275.076691 C 1235.53772 275.076691 1208.135132 287.55249 1156.08313 261.72113 C 1147.897827 257.665405 1133.696655 250.907196 1124.786255 245.003265 C 1123.107544 254.099945 1120.834717 264.991241 1116.869751 276.728271 C 1145.994263 289.62381 1172.775879 307.307037 1172.775879 307.307037 L 1172.775879 307.307037 C 1172.775879 307.307037 1149.680664 381.322723 1124.786255 409.329651 C 1119.286987 415.372772 1112.055298 420.355011 1103.735596 424.491119 L 1149.66394 415.057159 C 1149.818237 414.902802 1149.989502 414.764954 1150.144165 414.607147 L 1188.380615 333.521057 C 1201.86377 300.753357 1219.711182 283.933411 1229.172363 278.222351 C 1233.103638 276.271698 1235.53772 275.076691 1235.53772 275.076691 Z"/>
+                        </g>
+                        <g id="g6">
+                            <path fill="url(#warframe_logo_lotus_gradient)" d="M 1150.741699 314.57547 C 1150.741699 314.57547 1135.50293 320.974792 1106.267334 306.823669 C 1103.030762 311.755371 1099.411377 316.740967 1095.469849 321.716675 C 1106.931763 327.323212 1114.935913 332.064117 1114.935913 332.064117 C 1114.935913 332.064117 1097.524658 374.104492 1083.182007 390.233093 C 1080.247803 393.462677 1076.790039 396.430634 1072.982544 399.163422 L 1102.601074 392.374908 C 1102.976807 392.019073 1103.366333 391.663269 1103.735596 391.294006 L 1124.5177 348.192657 C 1134.770996 326.188721 1143.446045 318.554169 1147.777222 315.93515 C 1149.603394 315.095947 1150.741699 314.57547 1150.741699 314.57547 Z"/>
+                        </g>
+                    </g>
+                    <path fill="url(#warframe_logo_lotus_gradient)" d="M 1098.790527 199.303528 C 1098.790527 199.303528 925.286987 112.865662 921.372253 52.39325 C 921.368774 52.485718 921.365662 52.593018 921.362244 52.687195 C 921.358826 52.593018 921.355347 52.485718 921.352295 52.39325 C 917.437561 112.863953 743.935791 199.303528 743.935791 199.303528 C 743.935791 199.303528 723.038086 293.790222 802.349915 370.055389 L 804.404724 369.128845 C 761.526489 323.086334 749.819397 271.772858 783.624329 236.843384 L 921.352295 155.387756 C 921.352295 155.387756 921.355347 155.115784 921.362244 154.654053 C 921.368774 155.114075 921.372253 155.386047 921.372253 155.386047 L 1059.096802 236.839966 C 1092.905151 271.772858 1081.19458 323.086334 1038.314575 369.121979 L 1040.372925 370.052246 C 1119.682983 293.790222 1098.790527 199.303528 1098.790527 199.303528 Z"/>
+                    <path fill="url(#warframe_logo_lotus_gradient)" d="M 1037.549316 278.467468 C 1037.549316 278.467468 925.229919 222.499084 921.29834 182.874146 C 921.284912 182.622498 921.278381 182.357422 921.265015 182.115356 C 921.261597 182.206116 921.231262 182.300354 921.224731 182.392517 C 921.217834 182.300354 921.191101 182.206116 921.184143 182.115356 C 921.174255 182.357422 921.164246 182.622498 921.153931 182.874146 C 917.222656 222.494263 804.903198 278.467468 804.903198 278.467468 C 804.903198 278.467468 791.201782 339.362762 843.220398 389.387054 L 844.564941 388.775757 C 816.442261 358.576874 808.762268 324.919434 830.934326 302.009216 C 830.934326 302.009216 920.371826 249.114319 921.224731 248.610626 L 1011.516479 302.009216 C 1033.685181 324.919434 1026.01001 358.576874 997.882446 388.772705 L 999.235596 389.387054 C 1051.253906 339.362762 1037.549316 278.467468 1037.549316 278.467468 Z"/>
+                    <path fill="url(#warframe_logo_lotus_gradient)" d="M 998.204956 335.33902 C 998.204956 335.33902 923.87677 298.301117 921.274963 272.080231 C 921.265015 271.914154 921.261597 271.736053 921.251526 271.578278 C 921.251526 271.638763 921.227844 271.69928 921.224731 271.761169 C 921.221313 271.69928 921.200989 271.638763 921.197571 271.578278 C 921.194519 271.736053 921.187622 271.914154 921.177673 272.080231 C 918.578918 298.299408 844.24762 335.33902 844.24762 335.33902 C 844.24762 335.33902 835.181152 375.638824 869.605652 408.742065 L 870.495361 408.337463 C 851.885681 388.354614 846.802734 366.080475 861.474304 350.918579 C 861.474304 350.918579 920.664001 315.915222 921.224731 315.581055 L 980.974854 350.918579 C 995.646484 366.080475 990.566956 388.354614 971.953796 408.335724 L 972.850403 408.742065 C 1007.272766 375.638824 998.204956 335.33902 998.204956 335.33902 Z"/>
+                </g>
+            </svg>
+
+            <segmented-display>
+                <time datetime="1999">1999</time>
+                <div class="display-container display-no-1">
+                    <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                </div>
+                <div class="display-container display-no-9">
+                    <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                </div>
+                <div class="display-container display-no-9">
+                    <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                </div>
+                <div class="display-container display-no-9">
+                    <div class="segment-x segment-a"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-b"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-c"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-d"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-e"><span class="segment-border"></span></div>
+                    <div class="segment-y segment-f"><span class="segment-border"></span></div>
+                    <div class="segment-x segment-g"><span class="segment-border"></span></div>
+                </div>
+            </segmented-display>
+        </header>
+    </body>
+</html>
